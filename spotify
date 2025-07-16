@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Spotify Callback</title>
+</head>
+<body>
+  <h1>Callback przyjęty</h1>
+  <script>
+    // Parsuj token z URL fragmentu
+    const hash = window.location.hash.substring(1);
+    const params = new URLSearchParams(hash);
+    const accessToken = params.get("access_token");
+
+    if (accessToken) {
+      document.body.innerHTML = "<h2>Token przyjęty!</h2><p>" + accessToken + "</p>";
+      console.log("Access token:", accessToken);
+    } else {
+      document.body.innerHTML = "<h2>Nie znaleziono tokenu</h2>";
+    }
+  </script>
+</body>
+</html>
