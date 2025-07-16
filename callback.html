@@ -1,22 +1,38 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Callback</title>
-    <script>
-      // Pobierz token z URL fragmentu (hash)
-      const hash = window.location.hash.substring(1);
-      const params = new URLSearchParams(hash);
-      const accessToken = params.get("access_token");
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Spotify Auth</title>
+  <style>
+    body {
+      background: #111;
+      color: #0f0;
+      font-family: monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    code {
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <h1>Token Spotify:</h1>
+  <code id="token">Odczytywanie...</code>
 
-      if (accessToken) {
-        // Przekieruj do głównej strony z tokenem
-        window.location.href = `/spotify-auth/?token=${accessToken}`;
-      } else {
-        document.body.innerHTML = "<h2>Brak tokenu</h2>";
-      }
-    </script>
-  </head>
-  <body>
-    <h2>Przekierowywanie...</h2>
-  </body>
+  <script>
+    const hash = window.location.hash.substring(1);
+    const params = new URLSearchParams(hash);
+    const token = params.get('access_token');
+
+    if (token) {
+      document.getElementById('token').textContent = token;
+    } else {
+      document.getElementById('token').textContent = "Brak tokenu w URL.";
+    }
+  </script>
+</body>
 </html>
