@@ -2,36 +2,59 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <title>Spotify Auth</title>
+  <title>Aktualny utwór Spotify</title>
   <style>
     body {
-      background: #111;
-      color: #0f0;
-      font-family: monospace;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      background: transparent;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      font-size: 22px;
+      text-align: center;
+      padding-top: 20px;
+      text-shadow: 0 0 10px #1DB954;
     }
-    code {
-      word-break: break-all;
+    .track {
+      color: #1DB954;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <h1>Token Spotify:</h1>
-  <code id="token">Odczytywanie...</code>
+  <div id="song">Ładowanie...</div>
 
   <script>
     const hash = window.location.hash.substring(1);
     const params = new URLSearchParams(hash);
-    const token = params.get('access_token');
+    const token = params.get("access_token");
+
+    async function getCurrentTrack() {
+      try {
+        const res = await fetch("https://api.spotify.com/v1/me/player/currently-playing", {
+          headers: {
+            Authorization: "Bearer " + token
+          }
+        });
+
+        if (res.status === 204 || res.status === 202) {
+          document.getElementById("song").innerText = "🎧 Nic nie gra aktualnie.";
+          return;
+        }
+
+        const data = await res.json();
+        const track = data.item;
+        document.getElementById("song").innerHTML =
+          `🎵 <span class="track">${track.name}</span> – ${track.artists.map(a => a.name).join(", ")}`;
+      } catch (err) {
+        document.getElementById("song").innerText = "❌ Błąd przy pobieraniu utworu.";
+        console.error(err);
+      }
+    }
 
     if (token) {
-      document.getElementById('token').textContent = token;
+      getCurrentTrack();
+      setInterval(getCurrentTrack, 10000); // aktualizacja co 10s
     } else {
-      document.getElementById('token').textContent = "Brak tokenu w URL.";
+      document.getElementById("song").innerText = "❌ Brak tokenu w URL.";
     }
   </script>
 </body>
