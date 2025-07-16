@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Callback</title>
+    <script>
+      // Pobierz token z URL fragmentu (hash)
+      const hash = window.location.hash.substring(1);
+      const params = new URLSearchParams(hash);
+      const accessToken = params.get("access_token");
+
+      if (accessToken) {
+        // Przekieruj do głównej strony z tokenem
+        window.location.href = `/spotify-auth/?token=${accessToken}`;
+      } else {
+        document.body.innerHTML = "<h2>Brak tokenu</h2>";
+      }
+    </script>
+  </head>
+  <body>
+    <h2>Przekierowywanie...</h2>
+  </body>
+</html>
